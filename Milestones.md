@@ -3,6 +3,7 @@
 October 5: Order small accelerometer
 
 October 27: Pedometer code working, find old phone/screen, find strap
+  http://www.nkcelectronics.com/character-lcd-module-8x2-bl82.html
 
 November 3: Abstract due, figure out how to solder wires, write code for screen, time
 
