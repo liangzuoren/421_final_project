@@ -30,5 +30,9 @@ void loop() {
 
   Serial.println(steps);
 
+  if(CircuitPlayground.rightButton()){
+    steps = 0;
+  }
+
   delay(500);
 }
