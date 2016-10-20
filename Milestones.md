@@ -1,5 +1,7 @@
 # Milestones, Team Microcontrollaaaaa 
 
+October 5: Order small accelerometer
+
 October 27: Pedometer code working, find old phone/screen, find strap
 
 November 3: Abstract due, figure out how to solder wires, write code for screen, time
