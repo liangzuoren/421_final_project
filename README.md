@@ -1,16 +1,10 @@
 # 421_final_project
 Rice BIOE 421 Final Project
 
-Brainstorm
-Smart Watch
-http://www.tinkernut.com/portfolio/make-smartwatch-old-cell-phone-part-1/
-We will design a portable watch, similar to that created by Tinkernut, but with some key
-additions and modifications. The watch will be fashioned using an old smartphone and Arduino
-Mini Pro. The watch is capable of telling time and connecting via Bluetooth to the user's
-cellphone to pass on notifications from the cellphone to the watch. We hope to add a camera to the watch,
-as well as a pedometer, and a heart rate sensor.
+Fitness Watch
+	We have developed an affordable watch that, in addition to keeping time, functions as a pedometer which counts calories burned throughout the day. Our watch will also have a stop-watch feature to help with timed workouts. Unlike most of the pedometers on the market today, ours is capable of storing the user’s fitness data over time and displaying this information as graphs and charts on the pedometer display. This allows the user to collect information from their pedometer in an easy-to-utilize way, which can help them with their fitness goals. Data logging can better inform the user’s fitness activity, and ensure that they are recognizing the times when they are falling short. In addition, our watch utilizes a calorie counting algorithm which takes into account the user’s gender, height, and weight in order to estimate the calories burned daily, and can log this information over time as well. Most of the pedometers with data logging capability that are on the market today are very costly, so our watch would fulfill the need for a cost-efficient fitness monitor to promote public health. We utilized an Arduino Pro Mini, a small OLED display, a triple-axis accelerometer, and a data logger in order to create this low-cost device.
 
-Use cases: We expect students on campus to use this as an easier way of getting phone notifications without
-having to actually take out their phone, as well as a way of monitoring their exercise (steps per day 
-as well as heart rate during strenuous exercise). This device would be cheaper than an AppleWatch
-while performing many of the same functions.
+Haiku
+Let us exercise
+We love to walk everyday
+How much did we walk?
