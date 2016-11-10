@@ -8,6 +8,7 @@
 
 float X,Y,Z;
 int steps;
+String val;
 
 void setup(void) {
   
@@ -29,8 +30,24 @@ void loop() {
   steps = steps + 1;
   }
 
-  Serial.println(steps);
-  digitalClockDisplay();
+  Serial.println(val);
+  if (Serial.available() > 0){
+    
+  
+    if(val.equals('0')){
+    Serial.print("Steps: ");
+    Serial.print(steps);
+    Serial.print("\n");
+    delay(150);
+    }
+    
+    if(val.equals('1')){
+    Serial.print("Time: ");
+    digitalClockDisplay();
+    Serial.print("\n");
+    delay(150);
+    }
+  }
 
   if(CircuitPlayground.rightButton()){
     steps = 0;
@@ -39,25 +56,19 @@ void loop() {
   delay(500);
 }
 
-void establishContact(){
-  if (Serial.available() <= 0){
-    Serial.println("A");
-    delay(300);
-  }
-
-}
-
 void digitalClockDisplay(){
-Serial.print(hour());
-printDigits(minute());
-printDigits(second());
-Serial.print(" ");
-Serial.print(day());
-Serial.print(" ");
-Serial.print(month());
-Serial.print(" ");
-Serial.print(year());
-Serial.println();
+//Serial.print(hour());
+//printDigits(minute());
+//printDigits(second());
+//Serial.print(" ");
+//Serial.print(day());
+//Serial.print(" ");
+//Serial.print(month());
+//Serial.print(" ");
+//Serial.print(year());
+//Serial.println();
+Serial.print(millis());
+Serial.print("\n");
 }
 
 void printDigits(int digits){
@@ -67,6 +78,17 @@ if(digits < 10){
   }
 Serial.print(digits);
 }
+
+
+void establishContact(){
+  while (Serial.available() <= 0){
+  Serial.print("Start");
+  Serial.print("\n");
+  delay(300);
+  }
+}
+
+
 
 
 

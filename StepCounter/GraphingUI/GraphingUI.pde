@@ -22,6 +22,19 @@ boolean firstContact = false;
 XYChart lineChart;
 void setup()
 {
+lineChart = new XYChart(this);
+// Axis formatting and labels.
+lineChart.showXAxis(true); 
+lineChart.showYAxis(true); 
+lineChart.setMinY(0);
+     
+lineChart.setYFormat("0");  // Monetary value in $US
+lineChart.setXFormat("00,000");      // Year
+   
+// Symbol colours
+lineChart.setPointColour(color(180,50,50,100));
+lineChart.setPointSize(5);
+lineChart.setLineWidth(2);
 String portName = Serial.list()[0];
 myPort = new Serial(this, portName, 9600);
 size(500,200);
@@ -29,78 +42,65 @@ textFont(createFont("Arial",10),10);
 myPort.bufferUntil('\n');
 }
 
-  // Draws the chart and a title.
 void draw()
 {
-    if ( myPort.available() > 0)
-  { 
-    val = myPort.readStringUntil('\n');
-  }
-  println(val);
-  float stepsFromArduino = parseFloat(val);
-  println(steps);
-  
-    // Both x and y data set here.  
-  lineChart = new XYChart(this);
-  steps = append(steps, stepsFromArduino);
-  date = append(date, stepsFromArduino);
-  
-  lineChart.setData(steps, date);
-   
-  // Axis formatting and labels.
-  lineChart.showXAxis(true); 
-  lineChart.showYAxis(true); 
-  lineChart.setMinY(0);
-     
-  lineChart.setYFormat("##,###");  // Monetary value in $US
-  lineChart.setXFormat("00.00");      // Year
-   
-  // Symbol colours
-  lineChart.setPointColour(color(180,50,50,100));
-  lineChart.setPointSize(5);
-  lineChart.setLineWidth(2);
-  
   background(255);
   textSize(9);
-  lineChart.draw(15,15,width-30,height-30);
+  lineChart.draw(15,15,width,height);
    
   // Draw a title over the top of the chart.
   fill(120);
   textSize(20);
   text("Steps Taken Over Time", 70,30);
-
 }
 
 void serialEvent(Serial myPort){
   //put the incoming data into a String
   //the \n is our end delimeter, indicating the end of a complete packet
+  
  val = myPort.readStringUntil('\n');
+
  //make sure our data isn't empty before continuing
  if (val != null) {
    //trim whitespace and formatting characters (like carriage return)
    val = trim(val);
-   println("val");
- 
- //look for out 'A' string to start the handshake
- //if it's there, clear the buffer, and send a request for data
- if (firstContact ==false) {
-   if (val.equals("A")) {
-     myPort.clear();
-     firstContact = true;
-     myPort.write("A");
-     println("contact");
+   
+   if (firstContact == false) {
+   if(val.equals("Start")){
+   myPort.clear();
+   firstContact = true;
+   myPort.write('0');
+   println("contact");
    }
- }
- else { //if we've already established contact, keep getting and parsing data
-   println(val);
-   if (mousePressed ==true)
-   { //if we clicked in the window
-     myPort.write('1'); //send a 1
-     println("1");
+   
    }
-   //when you've parsed the data you have, ask for more
-   myPort.write("A");
+   
+   else {
+   
+   if (val.contains("Steps")){
+   myPort.clear();
+   String[] stepsFromArduino = val.split(" ",2);
+   float step = parseFloat(stepsFromArduino[1]);
+   steps = append(steps, step);
+   myPort.write('1');
+   delay(500);
+   }
+   
+   if(val.contains("Time")){
+   myPort.clear();
+   String[] timeFromArduino = val.split(" ",2);
+   float time = parseFloat(timeFromArduino[1]);
+   date = append(date,time);
+   myPort.write('0');
+   delay(500);
+   }
+   
+   if (steps.length == date.length)
+   {
+   lineChart.setData(date, steps);
+   
+   } 
  }
- }
+   
 }
- 
+}
