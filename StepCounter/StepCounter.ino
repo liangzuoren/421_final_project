@@ -2,10 +2,8 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <Time.h>
-#include <DateTime.h>
 
 // Counts the number of steps that you are taken using the accelerometer
-//
 
 float X,Y,Z;
 int steps;
@@ -20,9 +18,7 @@ void setup(void) {
   steps = 0;
 }
 
-void loop() {
-  getPCtime();
-  
+void loop() {  
   if(CircuitPlayground.rightButton()){
    steps = 0;
    recording = true; 
@@ -49,18 +45,19 @@ void loop() {
   }
 
   if(saveData == true){
-    Serial.print(steps);
-    Serial.print(" ");
-    Serial.print(hour());
-    printDigits(minute());
-    printDigits(second());
-    Serial.print(" ");
-    Serial.print(day());
-    Serial.print(" ");
-    Serial.print(month());
-    Serial.print(" ");
-    Serial.print(year());
-    Serial.println();
+//    Serial.print(steps);
+//    Serial.print(" ");
+//    Serial.print(hour());
+//    printDigits(minute());
+//    printDigits(second());
+//    Serial.print(" ");
+//    Serial.print(day());
+//    Serial.print(" ");
+//    Serial.print(month());
+//    Serial.print(" ");
+//    Serial.print(year());
+//    Serial.println();
+    Serial.print(millis());
     Serial.print("\n");
     saveData = false;
     delay(500);
@@ -91,17 +88,3 @@ if(digits < 10){
 Serial.print(digits);
 }
 
-void getPCtime() {
-  // if time available from serial port, sync the DateTime library
-  while(Serial.available() >=  TIME_MSG_LEN ){  // time message
-    if( Serial.read() == TIME_HEADER ) {        
-      time_t pctime = 0;
-      for(int i=0; i < TIME_MSG_LEN -1; i++){   
-        char c= Serial.read();          
-        if( c >= '0' && c <= '9')   
-          pctime = (10 * pctime) + (c - '0') ; // convert digits to a number            
-      }   
-      DateTime.sync(pctime);   // Sync DateTime clock to the time received on the serial port
-    }  
-  }
-}
