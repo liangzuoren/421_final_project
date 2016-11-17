@@ -67,14 +67,14 @@ void loop() {
 
   if(saveData == true){
     Serial.print(steps);
-    Serial.print(".");
-    Serial.print(hour());
-    printDigits(minute());
-    printDigits(second());
     Serial.print(" ");
-    Serial.print(day());
-    Serial.print("/");
+    Serial.print(hour());
+    Serial.print(".");
+    Serial.print(minute()*100/60);
+    Serial.print(" ");
     Serial.print(month());
+    Serial.print("/");
+    Serial.print(day());
     Serial.print("/");
     Serial.print(year());
     Serial.print("\n");
@@ -91,16 +91,16 @@ void digitalClockDisplay(){
   printDigits(second());
   Serial.print(" ");
   Serial.print(day());
-  Serial.print(" ");
+  Serial.print("/");
   Serial.print(month());
-  Serial.print(" ");
+  Serial.print("/");
   Serial.print(year()); 
   Serial.println(); 
 }
 
 void printDigits(int digits){
   // utility function for digital clock display: prints preceding colon and leading 0
-  Serial.print(":");
+  Serial.print(".");
   if(digits < 10)
     Serial.print('0');
   Serial.print(digits);
