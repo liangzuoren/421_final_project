@@ -9,6 +9,10 @@
 float X,Y,Z;
 int steps;
 String val;
+double restTimeBegin;
+double restTimeEnd;
+double restTime;
+boolean resting;
 boolean recording = false;
 boolean saveData = false;
 #define TIME_HEADER  'T'   // Header tag for serial time sync message
@@ -20,6 +24,7 @@ void setup(void) {
   Serial.begin(9600);
   CircuitPlayground.begin();
   steps = 0;
+  restTime = 0;
 }
 
 void loop() {  
@@ -43,11 +48,16 @@ void loop() {
   if(CircuitPlayground.rightButton()){
    steps = 0;
    recording = true; 
+   resting = false;
+   CircuitPlayground.setPixelColor(9, 0,  255,   0);
   }
 
   if(CircuitPlayground.leftButton()){
    recording = false;
    saveData = true;
+   CircuitPlayground.setPixelColor(9, 0,  0,   255);
+   delay(500);
+   CircuitPlayground.setPixelColor(9, 0,  0,   0);
   }
 
   if(recording == true){
@@ -58,11 +68,38 @@ void loop() {
   float magnitude = sqrt(X*X+Y*Y+Z*Z);
   int threshold = 13;
 
+  if (magnitude < threshold && resting == false){
+  restTimeBegin = millis();
+  resting = true;
+  }
   
   if (magnitude > threshold){
   steps = steps + 1;
-  }
+  resting = false;
+  restTimeEnd = millis();
+    if ((restTimeEnd - restTimeBegin)>30000){
+    restTime = restTime + (restTimeEnd - restTimeBegin);
+    CircuitPlayground.playTone(500, 100);
+    }
+  
+  CircuitPlayground.setPixelColor(1, 128,  128,   128);
+  CircuitPlayground.setPixelColor(2, 255,  0,   0);
+  CircuitPlayground.setPixelColor(3, 0,  255,   0);
+  CircuitPlayground.setPixelColor(4, 0,  0,   255);
+  CircuitPlayground.setPixelColor(5, 128,  128,   0);
+  CircuitPlayground.setPixelColor(6, 0,  128,   128);
+  CircuitPlayground.setPixelColor(7, 128,  0,   128);
+  CircuitPlayground.setPixelColor(8, 128,  128,   128);
   delay(200);
+  CircuitPlayground.setPixelColor(1, 0,  0,   0);
+  CircuitPlayground.setPixelColor(2, 0,  0,   0);
+  CircuitPlayground.setPixelColor(3, 0,  0,   0);
+  CircuitPlayground.setPixelColor(4, 0,  0,   0);
+  CircuitPlayground.setPixelColor(5, 0,  0,   0);
+  CircuitPlayground.setPixelColor(6, 0,  0,   0);
+  CircuitPlayground.setPixelColor(7, 0,  0,   0);
+  CircuitPlayground.setPixelColor(8, 0,  0,   0);
+  }
   }
 
   if(saveData == true){
@@ -77,11 +114,16 @@ void loop() {
     Serial.print(day());
     Serial.print("/");
     Serial.print(year());
+    Serial.print(" ");
+    Serial.print(restTime);
     Serial.print("\n");
     saveData = false;
     delay(500);
   }
-  
+
+  else{
+    delay(300);
+  }
 }
 
 void digitalClockDisplay(){

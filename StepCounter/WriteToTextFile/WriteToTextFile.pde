@@ -49,6 +49,7 @@ void draw() {
   if (mySerial.available() > 0){
     String value = mySerial.readStringUntil('\n');
     if ( value != null){
+      value = value.replace("\n","").replace("\r","");
       output.println(value);
     }
   }

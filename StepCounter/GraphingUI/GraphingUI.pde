@@ -9,11 +9,14 @@ import javax.swing.*;
  
 XYChart stepsTimeGraph;
 XYChart caloriesBurnedGraph;
+XYChart restingTimeGraph;
 List<Float> steps = new ArrayList<Float>(1000);
 List<Float> time = new ArrayList<Float>(1000);
 List<Float> date = new ArrayList<Float>(1000);
+List<Float> restTime = new ArrayList<Float>(1000);
 float[] calories;
 float[] timeGraph; 
+float[] restGraph;
 
 void settings(){
   size(1000,500);
@@ -24,21 +27,24 @@ void setup()
   textFont(createFont("Arial",20),20);
     
   String lines[] = loadStrings("C:\\Users\\Tony Ren\\Documents\\421_final_project\\StepCounter\\data.txt");
-  for(int i = 0 ; i < lines.length; i=i+2){
-    String[] parts = lines[i].split(" ");
+  for(int i = 0 ; i < lines.length; i++){
+    String[] parts = lines[i].split(" ");    
     steps.add(Float.valueOf(parts[0]));
     time.add(Float.valueOf(parts[1]));
- //   date.add(Float.valueOf(parts[2]));
+//    date.add(Float.valueOf(parts[2]));
+    restTime.add(Float.valueOf(parts[3]));
   }
   
   float[] stepsGraph = new float[steps.size()]; 
   timeGraph = new float[time.size()];
   //float[] dateGraph = new float[date.size()];
+  restGraph = new float[restTime.size()];
   
   for(int i=0;i<steps.size();i++){
      stepsGraph[i] = (float) steps.get(i);
      timeGraph[i] = (float) time.get(i);
   //   dateGraph[i] = (float) date.get(i);
+     restGraph[i] = (float) restTime.get(i);
   }
   
   calories = new float[stepsGraph.length];
@@ -68,6 +74,10 @@ void setup()
   String[] args = {"Second Window"};
   SecondApplet sa = new SecondApplet();
   PApplet.runSketch(args, sa);
+  
+  String[] args3 = {"Third Window"};
+  ThirdApplet sa3 = new ThirdApplet();
+  PApplet.runSketch(args3, sa3);
 }
  
 // Draws the chart and a title.
@@ -115,5 +125,43 @@ public class SecondApplet extends PApplet{
   fill(120);
   textSize(30);
   text("Calories Burned Over Time", 70, 30);
+  }
+}
+
+public class ThirdApplet extends PApplet{
+  public void settings(){
+  size(1000,500);
+  }
+  public void setup(){
+   float[] restGraphMinutes = new float[restGraph.length];
+    for (int i = 0;i < restGraph.length;i++){
+      restGraphMinutes[i] = restGraph[i]/60000;
+    }
+    
+  restingTimeGraph = new XYChart(this);
+  restingTimeGraph.setData(timeGraph,restGraphMinutes);
+  
+  restingTimeGraph.showXAxis(true); 
+  restingTimeGraph.showYAxis(true); 
+  restingTimeGraph.setMinY(0);
+  textFont(createFont("Arial",10),10);
+  restingTimeGraph.setXAxisLabel("Time(hours)");
+  restingTimeGraph.setYAxisLabel("Resting Time(minutes)");
+  restingTimeGraph.setYFormat("0.000");  // Resting Time
+  restingTimeGraph.setXFormat("000.00");      // Time
+   
+  // Symbol colours
+  restingTimeGraph.setPointColour(color(180,50,50,100));
+  restingTimeGraph.setPointSize(5);
+  restingTimeGraph.setLineWidth(2);
+  }
+  public void draw(){
+  background(255);
+  textSize(9);
+  restingTimeGraph.draw(15,15,width-30,height-30);
+  
+  fill(120);
+  textSize(30);
+  text("Resting Time Per Workout", 70, 30);
   }
 }
