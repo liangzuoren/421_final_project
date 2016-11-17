@@ -1,106 +1,65 @@
-import org.gicentre.utils.spatial.*;
-import org.gicentre.utils.network.*;
-import org.gicentre.utils.network.traer.physics.*;
-import org.gicentre.utils.geom.*;
-import org.gicentre.utils.move.*;
-import org.gicentre.utils.stat.*;
-import org.gicentre.utils.gui.*;
-import org.gicentre.utils.colour.*;
-import org.gicentre.utils.text.*;
-import org.gicentre.utils.*;
-import org.gicentre.utils.network.traer.animation.*;
-import org.gicentre.utils.io.*;
-
-import processing.serial.*;
-Serial myPort;
-String val;
-float[] steps = {0,0};
-float[] date = {0,0};
-boolean firstContact = false;
+import org.gicentre.utils.stat.*;    // For chart classes.
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.*;
+ 
 // Displays a simple line chart representing a time series.
  
 XYChart lineChart;
+List<Float> steps = new ArrayList<Float>(1000);
+List<Float> time = new ArrayList<Float>(1000);
+ 
+// Loads data into the chart and customises its appearance.
 void setup()
 {
-lineChart = new XYChart(this);
-// Axis formatting and labels.
-lineChart.showXAxis(true); 
-lineChart.showYAxis(true); 
-lineChart.setMinY(0);
-     
-lineChart.setYFormat("0");  // Monetary value in $US
-lineChart.setXFormat("00,000");      // Year
+  size(1000,500);
+  textFont(createFont("Arial",20),20);
+  
+  String lines[] = loadStrings("C:\\Users\\Tony Ren\\Documents\\421_final_project\\StepCounter\\data.txt");
+  for(int i = 0 ; i < lines.length; i=i+2){
+    String[] parts = lines[i].split("\\.");
+    steps.add(Float.valueOf(parts[0]));
+    time.add(Float.valueOf(parts[1]));
+  }
+  
+  float[] stepsGraph = new float[steps.size()]; 
+  float[] timeGraph = new float[time.size()];
+  
+  for(int i=0;i<steps.size();i++){
+     stepsGraph[i] = (float) steps.get(i);
+     timeGraph[i] = (float) time.get(i);
+  }
+  
+  // Both x and y data set here.  
+  lineChart = new XYChart(this);
+  lineChart.setData(timeGraph, stepsGraph);
    
-// Symbol colours
-lineChart.setPointColour(color(180,50,50,100));
-lineChart.setPointSize(5);
-lineChart.setLineWidth(2);
-String portName = Serial.list()[0];
-myPort = new Serial(this, portName, 9600);
-size(500,200);
-textFont(createFont("Arial",10),10); 
-myPort.bufferUntil('\n');
+  // Axis formatting and labels.
+  lineChart.showXAxis(true); 
+  lineChart.showYAxis(true); 
+  lineChart.setMinY(0);
+  textFont(createFont("Arial",10),10);
+  lineChart.setXAxisLabel("Time(millis)");
+  lineChart.setYAxisLabel("Steps");
+  lineChart.setYFormat("000");  // Steps
+  lineChart.setXFormat("000000");      // Time
+   
+  // Symbol colours
+  lineChart.setPointColour(color(180,50,50,100));
+  lineChart.setPointSize(5);
+  lineChart.setLineWidth(2);
 }
-
+ 
+// Draws the chart and a title.
 void draw()
 {
   background(255);
   textSize(9);
-  lineChart.draw(15,15,width,height);
+  lineChart.draw(15,15,width-30,height-30);
    
   // Draw a title over the top of the chart.
   fill(120);
-  textSize(20);
-  text("Steps Taken Over Time", 70,30);
-}
-
-void serialEvent(Serial myPort){
-  //put the incoming data into a String
-  //the \n is our end delimeter, indicating the end of a complete packet
-  
- val = myPort.readStringUntil('\n');
-
- //make sure our data isn't empty before continuing
- if (val != null) {
-   //trim whitespace and formatting characters (like carriage return)
-   val = trim(val);
-   
-   if (firstContact == false) {
-   if(val.equals("Start")){
-   myPort.clear();
-   firstContact = true;
-   myPort.write('0');
-   println("contact");
-   }
-   
-   }
-   
-   else {
-   
-   if (val.contains("Steps")){
-   myPort.clear();
-   String[] stepsFromArduino = val.split(" ",2);
-   float step = parseFloat(stepsFromArduino[1]);
-   steps = append(steps, step);
-   myPort.write('1');
-   delay(500);
-   }
-   
-   if(val.contains("Time")){
-   myPort.clear();
-   String[] timeFromArduino = val.split(" ",2);
-   float time = parseFloat(timeFromArduino[1]);
-   date = append(date,time);
-   myPort.write('0');
-   delay(500);
-   }
-   
-   if (steps.length == date.length)
-   {
-   lineChart.setData(date, steps);
-   
-   } 
- }
-   
-}
+  textSize(30);
+  text("Steps over Time", 70,30);
 }
