@@ -72,6 +72,8 @@ void loop() {
   restTimeBegin = millis();
   resting = true;
   }
+
+
   
   if (magnitude > threshold){
   steps = steps + 1;
@@ -79,7 +81,6 @@ void loop() {
   restTimeEnd = millis();
     if ((restTimeEnd - restTimeBegin)>30000){
     restTime = restTime + (restTimeEnd - restTimeBegin);
-    CircuitPlayground.playTone(500, 100);
     }
   
   CircuitPlayground.setPixelColor(1, 128,  128,   128);
