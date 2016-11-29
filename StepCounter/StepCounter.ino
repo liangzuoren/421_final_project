@@ -131,12 +131,12 @@ void loop() {
   // Printing the data that needs to be saved into the Serial port for Processing to receive
   if(saveData == true){
     Serial.print(steps); //Printing steps
-    Serial.print(" ");
+    Serial.print(" "); 
     Serial.print(hour()); //Printing time
     Serial.print(".");
     Serial.print(minute()*100/60);
     Serial.print(" ");
-    Serial.print(month());
+    Serial.print(month()); //Printing date
     Serial.print("/");
     Serial.print(day());
     Serial.print("/");
